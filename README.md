@@ -1,6 +1,9 @@
 JSONLD-Java Clerezza Integration module
 =======================================
 
+[![Build Status](https://travis-ci.org/jsonld-java/jsonld-java-clerezza.svg?branch=master)](https://travis-ci.org/jsonld-java/jsonld-java-clerezza) 
+[![Coverage Status](https://coveralls.io/repos/jsonld-java/jsonld-java-clerezza/badge.svg?branch=master)](https://coveralls.io/r/jsonld-java/jsonld-java-clerezza?branch=master)
+
 USAGE
 =====
 
