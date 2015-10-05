@@ -1,1 +1,1 @@
-com.github.jsonldjava.clerezza.JsonLdSerializingProvider
+com.github.jsonldjava.clerezza.ClerezzaJsonLdSerializingProvider
