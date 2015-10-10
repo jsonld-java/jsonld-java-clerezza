@@ -22,6 +22,9 @@
 		<developer>
 			<name>Peter Ansell</name>
 		</developer>
+		<developer>
+			<name>Rupert Westenthaler</name>
+		</developer>
 	</developers>
 
 	<properties>
@@ -37,6 +40,19 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.clerezza</groupId>
+			<artifactId>rdf.core</artifactId>
+			<version>${clerezza.version}</version>
+		</dependency>
+		<!-- OSGI related -->
+		<dependency>
+			<groupId>org.apache.felix</groupId>
+			<artifactId>org.apache.felix.scr.annotations</artifactId>
+			<version>1.9.12</version>
+		</dependency>
+
+		<!-- Test dependencies -->
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>jsonld-java</artifactId>
 			<version>${project.version}</version>
@@ -45,8 +61,9 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.clerezza</groupId>
-			<artifactId>rdf.core</artifactId>
-			<version>${clerezza.version}</version>
+			<artifactId>rdf.ontologies</artifactId>
+			<version>0.12</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -73,6 +90,48 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<inherited>true</inherited>
+				<configuration>
+					<instructions>
+						<Bundle-DocURL>https://github.com/jsonld-java/jsonld-java-clerezza</Bundle-DocURL>
+						<Bundle-Vendor>JSONLD-JAVA Clerezza Integration</Bundle-Vendor>
+						<Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+						<_versionpolicy>$${version;===;${@}}</_versionpolicy>
+						<_provider-policy>[$(version;===;$(@)),$(version;=+;$(@)))</_provider-policy>
+						<_consumer-policy>[$(version;===;$(@)),$(version;+;$(@)))</_consumer-policy>
+					</instructions>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
+				<version>1.21.0</version>
+				<!-- slf4j impl is needed when QDox inspects/loads classes that use a 
+					static field for the logger, so that those classes can be loaded. -->
+				<dependencies>
+					<dependency>
+						<groupId>org.slf4j</groupId>
+						<artifactId>slf4j-simple</artifactId>
+						<version>${slf4j.version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<id>generate-scr-scrdescriptor</id>
+						<goals>
+							<goal>scr</goal>
+						</goals>
+						<configuration>
+							<properties>
+								<service.vendor>JSONLD-JAVA</service.vendor>
+							</properties>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
