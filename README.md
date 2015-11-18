@@ -15,7 +15,7 @@ From Maven
     <dependency>
         <groupId>com.github.jsonld-java</groupId>
         <artifactId>jsonld-java-clerezza</artifactId>
-        <version>0.7.0-SNAPSHOT</version>
+        <version>0.7.0</version>
     </dependency>
 
 (Adjust for most recent <version>, as found in ``pom.xml``).
