@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.clerezza.rdf.core.BNode;
-import org.apache.clerezza.rdf.core.Language;
-import org.apache.clerezza.rdf.core.MGraph;
-import org.apache.clerezza.rdf.core.NonLiteral;
-import org.apache.clerezza.rdf.core.Resource;
-import org.apache.clerezza.rdf.core.UriRef;
-import org.apache.clerezza.rdf.core.impl.PlainLiteralImpl;
-import org.apache.clerezza.rdf.core.impl.SimpleMGraph;
-import org.apache.clerezza.rdf.core.impl.TripleImpl;
-import org.apache.clerezza.rdf.core.impl.TypedLiteralImpl;
+import org.apache.clerezza.commons.rdf.BlankNode;
+import org.apache.clerezza.commons.rdf.BlankNodeOrIRI;
+import org.apache.clerezza.commons.rdf.Graph;
+import org.apache.clerezza.commons.rdf.IRI;
+import org.apache.clerezza.commons.rdf.Language;
+import org.apache.clerezza.commons.rdf.RDFTerm;
+import org.apache.clerezza.commons.rdf.impl.utils.PlainLiteralImpl;
+import org.apache.clerezza.commons.rdf.impl.utils.TripleImpl;
+import org.apache.clerezza.commons.rdf.impl.utils.TypedLiteralImpl;
+import org.apache.clerezza.commons.rdf.impl.utils.simple.SimpleGraph;
 
 import com.github.jsonldjava.core.JsonLdTripleCallback;
 import com.github.jsonldjava.core.RDFDataset;
@@ -22,15 +22,15 @@ public class ClerezzaTripleCallback implements JsonLdTripleCallback {
 
     private static final String RDF_LANG_STRING = "http://www.w3.org/1999/02/22-rdf-syntax-ns#langString";
 
-    private MGraph mGraph = new SimpleMGraph();
-    private Map<String, BNode> bNodeMap = new HashMap<String, BNode>();
+    private Graph mGraph = new SimpleGraph();
+    private Map<String, BlankNode> bNodeMap = new HashMap<>();
 
-    public void setMGraph(MGraph mGraph) {
-        this.mGraph = mGraph;
-        bNodeMap = new HashMap<String, BNode>();
+    public void setMGraph(Graph graph) {
+        this.mGraph = graph;
+        bNodeMap = new HashMap<>();
     }
 
-    public MGraph getMGraph() {
+    public Graph getMGraph() {
         return mGraph;
     }
 
@@ -40,41 +40,41 @@ public class ClerezzaTripleCallback implements JsonLdTripleCallback {
             return;
         }
 
-        final NonLiteral subject = getNonLiteral(s);
-        final UriRef predicate = new UriRef(p);
-        final NonLiteral object = getNonLiteral(o);
+        final BlankNodeOrIRI subject = getNonLiteral(s);
+        final IRI predicate = new IRI(p);
+        final BlankNodeOrIRI object = getNonLiteral(o);
         mGraph.add(new TripleImpl(subject, predicate, object));
     }
 
     private void triple(String s, String p, String value, String datatype, String language,
             String graph) {
-        final NonLiteral subject = getNonLiteral(s);
-        final UriRef predicate = new UriRef(p);
-        Resource object;
+        final BlankNodeOrIRI subject = getNonLiteral(s);
+        final IRI predicate = new IRI(p);
+        RDFTerm object;
         if (language != null) {
             object = new PlainLiteralImpl(value, new Language(language));
         } else if (datatype == null || RDF_LANG_STRING.equals(datatype)) {
             object = new PlainLiteralImpl(value);
         } else {
-            object = new TypedLiteralImpl(value, new UriRef(datatype));
+            object = new TypedLiteralImpl(value, new IRI(datatype));
         }
 
         mGraph.add(new TripleImpl(subject, predicate, object));
     }
 
-    private NonLiteral getNonLiteral(String s) {
+    private BlankNodeOrIRI getNonLiteral(String s) {
         if (s.startsWith("_:")) {
             return getBNode(s);
         } else {
-            return new UriRef(s);
+            return new IRI(s);
         }
     }
 
-    private BNode getBNode(String s) {
+    private BlankNode getBNode(String s) {
         if (bNodeMap.containsKey(s)) {
             return bNodeMap.get(s);
         } else {
-            final BNode result = new BNode();
+            final BlankNode result = new BlankNode();
             bNodeMap.put(s, result);
             return result;
         }

@@ -5,9 +5,10 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
-import org.apache.clerezza.rdf.core.MGraph;
-import org.apache.clerezza.rdf.core.Triple;
+import org.apache.clerezza.commons.rdf.Graph;
+import org.apache.clerezza.commons.rdf.Triple;
 import org.junit.Test;
 
 import com.github.jsonldjava.core.JsonLdError;
@@ -20,11 +21,11 @@ public class ClerezzaTripleCallbackTest {
     public void triplesTest() throws IOException, JsonLdError {
         final InputStream in = getClass().getClassLoader().getResourceAsStream(
                 "testfiles/product.jsonld");
-        final Object input = JsonUtils.fromInputStream(in);
+        final Object input = JsonUtils.fromInputStream(in, StandardCharsets.UTF_8);
 
         final ClerezzaTripleCallback callback = new ClerezzaTripleCallback();
 
-        final MGraph graph = (MGraph) JsonLdProcessor.toRDF(input, callback);
+        final Graph graph = (Graph) JsonLdProcessor.toRDF(input, callback);
 
         for (final Triple t : graph) {
             System.out.println(t);
@@ -37,11 +38,11 @@ public class ClerezzaTripleCallbackTest {
     public void curiesInContextTest() throws IOException, JsonLdError {
         final InputStream in = getClass().getClassLoader().getResourceAsStream(
                 "testfiles/curies-in-context.jsonld");
-        final Object input = JsonUtils.fromInputStream(in);
+        final Object input = JsonUtils.fromInputStream(in, StandardCharsets.UTF_8);
 
         final ClerezzaTripleCallback callback = new ClerezzaTripleCallback();
 
-        final MGraph graph = (MGraph) JsonLdProcessor.toRDF(input, callback);
+        final Graph graph = (Graph) JsonLdProcessor.toRDF(input, callback);
 
         for (final Triple t : graph) {
             System.out.println(t);

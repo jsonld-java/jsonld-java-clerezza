@@ -6,15 +6,14 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.ServiceLoader;
 
-import org.apache.clerezza.rdf.core.Graph;
-import org.apache.clerezza.rdf.core.Language;
+import org.apache.clerezza.commons.rdf.Graph;
+import org.apache.clerezza.commons.rdf.IRI;
+import org.apache.clerezza.commons.rdf.Language;
+import org.apache.clerezza.commons.rdf.Triple;
+import org.apache.clerezza.commons.rdf.impl.utils.PlainLiteralImpl;
+import org.apache.clerezza.commons.rdf.impl.utils.TripleImpl;
+import org.apache.clerezza.commons.rdf.impl.utils.simple.SimpleGraph;
 import org.apache.clerezza.rdf.core.LiteralFactory;
-import org.apache.clerezza.rdf.core.MGraph;
-import org.apache.clerezza.rdf.core.Triple;
-import org.apache.clerezza.rdf.core.UriRef;
-import org.apache.clerezza.rdf.core.impl.PlainLiteralImpl;
-import org.apache.clerezza.rdf.core.impl.SimpleMGraph;
-import org.apache.clerezza.rdf.core.impl.TripleImpl;
 import org.apache.clerezza.rdf.core.serializedform.Parser;
 import org.apache.clerezza.rdf.core.serializedform.Serializer;
 import org.apache.clerezza.rdf.ontologies.FOAF;
@@ -47,9 +46,9 @@ public class ClerezzaJsonLdParserSerializerTest {
     @BeforeClass
     public static void init(){
         LiteralFactory lf = LiteralFactory.getInstance();
-        UriRef pers1 = new UriRef("http://www.example.org/test#pers1");
-        UriRef pers2 = new UriRef("http://www.example.org/test#pers2");
-        MGraph data = new SimpleMGraph();
+        IRI pers1 = new IRI("http://www.example.org/test#pers1");
+        IRI pers2 = new IRI("http://www.example.org/test#pers2");
+        Graph data = new SimpleGraph();
         //NOTE: This test a language literal with and without language as
         //      well as a xsd:string typed literal. To test correct handling of
         //      RDF1.1
@@ -61,14 +60,14 @@ public class ClerezzaJsonLdParserSerializerTest {
         data.add(new TripleImpl(pers1, FOAF.age, lf.createTypedLiteral(38)));
         data.add(new TripleImpl(pers1, FOAF.knows, pers2));
         data.add(new TripleImpl(pers2, FOAF.name, new PlainLiteralImpl("Reto Bachmann-Gmür")));
-        rdfData = data.getGraph();
+        rdfData = data;
     }
     
     @Test
     public void parserTest() {
         final InputStream in = getClass().getClassLoader().getResourceAsStream(
                 "testfiles/product.jsonld");
-        SimpleMGraph graph = new SimpleMGraph();
+        SimpleGraph graph = new SimpleGraph();
         parser.parse(graph, in, "application/ld+json");
         Assert.assertEquals(13, graph.size());
     }
@@ -80,7 +79,7 @@ public class ClerezzaJsonLdParserSerializerTest {
         log.info("Serialized Graph: \n {}",new String(data,UTF8));
        
         //Now we reparse the graph to validate it was serialized correctly
-        SimpleMGraph reparsed = new SimpleMGraph();
+        SimpleGraph reparsed = new SimpleGraph();
         parser.parse(reparsed, new ByteArrayInputStream(data), "application/ld+json");
         Assert.assertEquals(7, reparsed.size());
         for(Triple t : rdfData){

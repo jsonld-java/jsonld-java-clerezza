@@ -3,10 +3,11 @@ package com.github.jsonldjava.clerezza;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.clerezza.rdf.core.MGraph;
-import org.apache.clerezza.rdf.core.UriRef;
+import org.apache.clerezza.commons.rdf.Graph;
+import org.apache.clerezza.commons.rdf.IRI;
 import org.apache.clerezza.rdf.core.serializedform.ParsingProvider;
 import org.apache.clerezza.rdf.core.serializedform.SupportedFormat;
+import org.apache.clerezza.utils.Uri;
 import org.apache.felix.scr.annotations.Component;
 import org.apache.felix.scr.annotations.ConfigurationPolicy;
 import org.apache.felix.scr.annotations.Service;
@@ -32,8 +33,8 @@ public class ClerezzaJsonLdParsingProvider implements ParsingProvider {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void parse(MGraph target, InputStream serializedGraph, String formatIdentifier,
-            UriRef baseUri) {
+    public void parse(Graph target, InputStream serializedGraph, String formatIdentifier,
+            IRI baseUri) {
         // The callback will add parsed triples to the target MGraph
         final ClerezzaTripleCallback ctc = new ClerezzaTripleCallback();
         ctc.setMGraph(target);
