@@ -15,7 +15,7 @@ From Maven
     <dependency>
         <groupId>com.github.jsonld-java</groupId>
         <artifactId>jsonld-java-clerezza</artifactId>
-        <version>0.10.0</version>
+        <version>0.12.0</version>
     </dependency>
 
 (Adjust for most recent <version>, as found in ``pom.xml``).
@@ -23,7 +23,7 @@ From Maven
 ClerezzaTripleCallback
 ------------------
 
-The ClerezzaTripleCallback returns an instance of `org.apache.clerezza.rdf.core.MGraph`
+The ClerezzaTripleCallback returns an instance of `org.apache.clerezza.commons.rdf.Graph`
 
 See [ClerezzaTripleCallbackTest.java](./src/test/java/com/github/jsonldjava/clerezza/ClerezzaTripleCallbackTest.java) for example Usage.
 
